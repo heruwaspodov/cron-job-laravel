@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\FetchUsersService;
+use App\Services\HourlyCalculateService;
 use Illuminate\Console\Command;
 
 /**
@@ -26,16 +27,18 @@ class FetchUsersCommand extends Command
     protected $description = 'Fetch users from API and store in database';
 
     protected FetchUsersService $fetchUserService;
+    protected HourlyCalculateService $hourlyCalculateService;
 
     /**
      * Create a new console command instance.
      *
      * @return void
      */
-    public function __construct(FetchUsersService $fetchUserService)
+    public function __construct(FetchUsersService $fetchUserService, HourlyCalculateService $hourlyCalculateService)
     {
         parent::__construct();
         $this->fetchUserService = $fetchUserService;
+        $this->hourlyCalculateService = $hourlyCalculateService;
     }
 
     /**
@@ -44,6 +47,7 @@ class FetchUsersCommand extends Command
     public function handle(): void
     {
         $this->fetchUserService->call($this->limit());
+        $this->hourlyCalculateService->call();
     }
 
     /**
